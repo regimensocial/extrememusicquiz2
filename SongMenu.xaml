@@ -1,0 +1,33 @@
+﻿<Page x:Class="MusicQuiz2.SongMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MusicQuiz2"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="SongMenu">
+
+    <Grid>
+        <Button x:Name="BTNmenu" Content="Menu" HorizontalAlignment="Left" Margin="24,38,0,0" VerticalAlignment="Top" Width="74" Click="BTNmenu_Click" Height="30"/>
+        <DataGrid x:Name="results" MouseDoubleClick="results_MouseDoubleClick" AutoGenerateColumns="False"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" CanUserResizeColumns="False" CanUserResizeRows="False" Margin="199,38,0,0" Height="228">
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Binding="{Binding Id}" x:Name="DGid" Header="ID" Width="1*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Artist}" x:Name="DGartist" Header="Artist" Width="3*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding SongName}" x:Name="DGsongname" Width="3*" Header="Song" IsReadOnly="True" />
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <Label x:Name="LBsongselect" Content="Selected Song" HorizontalAlignment="Left" Margin="101,277,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TBsongselect" HorizontalAlignment="Left" Height="23" Margin="199,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="193"/>
+
+        <Label x:Name="LBartistselect" Content="Selected Artist" HorizontalAlignment="Left" Margin="101,305,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="TBartistselect" HorizontalAlignment="Left" Height="23" Margin="199,305,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
+        <Button x:Name="BTNoverwrite" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23"/>
+        <Button x:Name="BTNadd" Content="Add Song" HorizontalAlignment="Left" Margin="199,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNadd_Click"/>
+
+
+    </Grid>
+</Page>
