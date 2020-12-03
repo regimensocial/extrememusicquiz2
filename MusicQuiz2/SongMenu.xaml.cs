@@ -48,16 +48,21 @@ namespace MusicQuiz2
             m_dbConnection = new SQLiteConnection($"Data Source={database}; Version=3;");
             m_dbConnection.Open();
 
-            RefreshSongs(false);
+            RefreshSongs();
 
 
         }
 
-        public void RefreshSongs(bool dir)
+        public void RefreshSongs()
         {
+
             
 
-            string stm = @"
+            results.Items.Clear();
+
+            
+
+            string stm = $@"
                 SELECT id, songName, artist FROM songs
             ";
 
@@ -89,12 +94,15 @@ namespace MusicQuiz2
 
         private void results_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            songItems temp = (songItems)results.SelectedItem;
+            if (results.SelectedItem is songItems)
+            {
+                songItems temp = (songItems)results.SelectedItem;
 
-            Trace.WriteLine(temp.SongName);
 
-            TBartistselect.Text = temp.Artist;
-            TBsongselect.Text = temp.SongName;
+                TBartistselect.Text = temp.Artist;
+                TBsongselect.Text = temp.SongName;
+            }
+            
         }
 
         private void BTNadd_Click(object sender, RoutedEventArgs e)
@@ -105,8 +113,21 @@ namespace MusicQuiz2
 
             cmd.ExecuteNonQuery();
 
-            RefreshSongs(false);
+            RefreshSongs();
+            results.ScrollIntoView(results.Items[results.Items.Count - 1]);
 
+        }
+
+        private void BTNoverwrite_Click(object sender, RoutedEventArgs e)
+        {
+            cmd = new SQLiteCommand(m_dbConnection);
+
+            cmd.CommandText = $@"INSERT INTO songs(songName, artist) VALUES('{TBsongselect.Text}', '{TBartistselect.Text}')";
+
+            cmd.ExecuteNonQuery();
+
+            RefreshSongs();
+            results.ScrollIntoView(results.Items[results.Items.Count - 1]);
         }
     }
 }

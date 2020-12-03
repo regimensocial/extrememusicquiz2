@@ -39,7 +39,7 @@ namespace MusicQuiz2
     {
 
         public static string RandomString(int length)
-        { // test
+        {
             Random random = new Random();
             
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -74,7 +74,8 @@ namespace MusicQuiz2
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             // DONE: TEMPORARY REMOVE AFTER
-            // this.Content = new Frame { Content = new GameEnd() };
+            // 
+            this.Content = new Frame { Content = new SongMenu() };
         }
 
         private void CheckValues(bool signin)

@@ -20,13 +20,15 @@
             </DataGrid.Columns>
 
         </DataGrid>
-        <Label x:Name="LBsongselect" Content="Selected Song" HorizontalAlignment="Left" Margin="101,277,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LBsongselect" Content="Song" Width="93" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,277,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TBsongselect" HorizontalAlignment="Left" Height="23" Margin="199,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="193"/>
 
-        <Label x:Name="LBartistselect" Content="Selected Artist" HorizontalAlignment="Left" Margin="101,305,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LBartistselect" Content="Artist" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,305,0,0" VerticalAlignment="Top" Width="93"/>
         <TextBox x:Name="TBartistselect" HorizontalAlignment="Left" Height="23" Margin="199,305,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <Button x:Name="BTNoverwrite" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23"/>
+        <Button x:Name="BTNoverwrite" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
         <Button x:Name="BTNadd" Content="Add Song" HorizontalAlignment="Left" Margin="199,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNadd_Click"/>
+        <Label x:Name="LBnamesong" Content="Original name: " Width="198" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LBnameartist" Content="Artist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="198"/>
 
 
     </Grid>

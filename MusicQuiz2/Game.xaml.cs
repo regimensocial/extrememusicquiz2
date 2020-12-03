@@ -158,11 +158,15 @@ namespace MusicQuiz2
                         LBtakeguess.Content = "It was";
                         TBsong.Text = songName;
 
+                        TBXguess.IsEnabled = false;
+                        BTNguess.Focus();
+                        TBXguess.IsEnabled = false;
+
+
                         if (guess == 1)
                         {
                             score = 3;
-                            BTNguess.Focus();
-                            TBXguess.IsEnabled = false;
+                            
                             BTNguess.Content = "Continue!";
                             LBmessage.Content = "You got the song right first try!";
                             guess = 2;
