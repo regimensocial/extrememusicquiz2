@@ -1,4 +1,8 @@
-MusicQuiz2/bin/
+MusicQuiz2/bin/Debug/*
+MusicQuiz2/bin/Release/*
 MusicQuiz2/obj/
 MusicQuiz2/Properties/
 packages/
+*.suo
+*.user
+!*.db

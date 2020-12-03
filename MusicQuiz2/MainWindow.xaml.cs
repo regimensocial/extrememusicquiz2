@@ -39,7 +39,7 @@ namespace MusicQuiz2
     {
 
         public static string RandomString(int length)
-        {
+        { // test
             Random random = new Random();
             
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
