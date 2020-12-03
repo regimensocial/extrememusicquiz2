@@ -75,7 +75,7 @@ namespace MusicQuiz2
 
             // DONE: TEMPORARY REMOVE AFTER
             // 
-            this.Content = new Frame { Content = new SongMenu() };
+            // this.Content = new Frame { Content = new SongMenu() };
         }
 
         private void CheckValues(bool signin)

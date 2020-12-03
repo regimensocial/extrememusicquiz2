@@ -25,10 +25,12 @@
 
         <Label x:Name="LBartistselect" Content="Artist" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,305,0,0" VerticalAlignment="Top" Width="93"/>
         <TextBox x:Name="TBartistselect" HorizontalAlignment="Left" Height="23" Margin="199,305,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <Button x:Name="BTNoverwrite" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
-        <Button x:Name="BTNadd" Content="Add Song" HorizontalAlignment="Left" Margin="199,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNadd_Click"/>
-        <Label x:Name="LBnamesong" Content="Original name: " Width="198" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="LBnameartist" Content="Artist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="198"/>
+        <Button x:Name="BTNoverwrite" IsEnabled="False" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
+        <Button x:Name="BTNadd" IsEnabled="True" Content="Add Song" HorizontalAlignment="Left" Margin="199,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNadd_Click"/>
+        <Label x:Name="LBnamesong" Width="198" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="LBnameartist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="198" FontWeight="Bold"/>
+        <Button x:Name="BTNdeselect" IsEnabled="False"  Content="Deselect Song" HorizontalAlignment="Left" Margin="401,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdeselect_Click"/>
+        <Button x:Name="BTNdel" IsEnabled="False"  Content="Delete Song" HorizontalAlignment="Left" Margin="401,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdel_Click" />
 
 
     </Grid>

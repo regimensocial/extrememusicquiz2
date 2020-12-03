@@ -39,6 +39,8 @@ namespace MusicQuiz2
 
         public int UserScore;
 
+        public songItems selection;
+
         public string database = Directory.GetCurrentDirectory() + "/data.db";
 
         public SongMenu()
@@ -85,6 +87,8 @@ namespace MusicQuiz2
 
 
             }
+
+            BTNdeselect_Click(null, null);
         }
 
         private void BTNmenu_Click(object sender, RoutedEventArgs e)
@@ -96,11 +100,19 @@ namespace MusicQuiz2
         {
             if (results.SelectedItem is songItems)
             {
-                songItems temp = (songItems)results.SelectedItem;
+                selection = (songItems)results.SelectedItem;
 
+                
+                TBartistselect.Text = selection.Artist;
+                TBsongselect.Text = selection.SongName;
+                LBnamesong.Content = selection.SongName;
+                LBnameartist.Content = selection.Artist;
 
-                TBartistselect.Text = temp.Artist;
-                TBsongselect.Text = temp.SongName;
+                BTNoverwrite.IsEnabled = true;
+                BTNadd.IsEnabled = false;
+
+                BTNdeselect.IsEnabled = true;
+                BTNdel.IsEnabled = true;
             }
             
         }
@@ -120,14 +132,49 @@ namespace MusicQuiz2
 
         private void BTNoverwrite_Click(object sender, RoutedEventArgs e)
         {
-            cmd = new SQLiteCommand(m_dbConnection);
+            if (selection != null) {
+                cmd = new SQLiteCommand(m_dbConnection);
 
-            cmd.CommandText = $@"INSERT INTO songs(songName, artist) VALUES('{TBsongselect.Text}', '{TBartistselect.Text}')";
+                cmd.CommandText = $@"DELETE FROM songs WHERE id={selection.Id} AND songName='{selection.SongName}' AND artist='{selection.Artist}'";
 
-            cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
 
-            RefreshSongs();
-            results.ScrollIntoView(results.Items[results.Items.Count - 1]);
+                cmd.CommandText = $@"INSERT INTO songs(id, songName, artist) VALUES({selection.Id}, '{TBsongselect.Text}', '{TBartistselect.Text}')";
+
+                cmd.ExecuteNonQuery();
+
+                RefreshSongs();
+            }
+
+        }
+
+        private void BTNdeselect_Click(object sender, RoutedEventArgs e)
+        {
+            selection = null;
+            TBartistselect.Text = "";
+            TBsongselect.Text = ""; 
+            LBnamesong.Content = "";
+            LBnameartist.Content = "";
+            BTNadd.IsEnabled = true;
+            BTNdeselect.IsEnabled = false;
+            BTNoverwrite.IsEnabled = false;
+            BTNdel.IsEnabled = false;
+        }
+
+        private void BTNdel_Click(object sender, RoutedEventArgs e)
+        {
+            if (selection != null)
+            {
+                cmd = new SQLiteCommand(m_dbConnection);
+
+                cmd.CommandText = $@"DELETE FROM songs WHERE id={selection.Id} AND songName='{selection.SongName}' AND artist='{selection.Artist}'";
+
+                cmd.ExecuteNonQuery();
+
+                RefreshSongs();
+
+
+            }
         }
     }
 }
