@@ -26,7 +26,7 @@ namespace MusicQuiz2
 
     public class Player
     {
-        public static string Username = "";
+        public static string Username = "developmentUser";
 
         public static string lastSong = "";
 
@@ -73,15 +73,17 @@ namespace MusicQuiz2
             InitializeComponent();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            // DONE: TEMPORARY REMOVE AFTER
+            
+
+            //  TEMPORARY REMOVE AFTER
             // 
-            // this.Content = new Frame { Content = new SongMenu() };
         }
 
         private void CheckValues(bool signin)
         {
             string content = "";
-            
+            usernameinput.Text = usernameinput.Text.Trim();
+
             if (!string.IsNullOrEmpty(usernameinput.Text) && !string.IsNullOrEmpty(password.Password) && usernameinput.Text.All(char.IsLetterOrDigit))
             {
                 // If every data be correct
@@ -117,7 +119,14 @@ namespace MusicQuiz2
 
                 // base end: read after
 
-                cmd.CommandText = $"SELECT * FROM players where username='{usernameinput.Text}';";
+                cmd = new SQLiteCommand("SELECT * FROM players WHERE username = @dataUsername", m_dbConnection);
+
+                SQLiteParameter[] parameters = {
+                    new SQLiteParameter("dataUsername", usernameinput.Text),
+                };
+
+                cmd.Parameters.AddRange(parameters);
+
                 SQLiteDataReader rdr = cmd.ExecuteReader();
 
                 var DBhash = "";
@@ -128,8 +137,6 @@ namespace MusicQuiz2
                     DBhash = rdr["hash"].ToString();
 
                     DBsalt = rdr["salt"].ToString();
-
-                    Trace.WriteLine("Hash from db: " + DBhash);
                 }
 
                 if (!signin) // If creating account
@@ -139,11 +146,16 @@ namespace MusicQuiz2
                         string salt = RandomString(new Random().Next(7, 14));
                         string hash = Base64Encode(System.Text.Encoding.ASCII.GetString(new System.Security.Cryptography.SHA256Managed().ComputeHash(System.Text.Encoding.ASCII.GetBytes(System.Text.Encoding.ASCII.GetString(new System.Security.Cryptography.SHA256Managed().ComputeHash(Encoding.ASCII.GetBytes(password.Password))) + salt))));
 
-                        cmd = new SQLiteCommand(m_dbConnection);
+                        cmd = new SQLiteCommand("INSERT INTO players(username, hash, salt) VALUES(@dataUsername, @dataHash, @dataSalt)", m_dbConnection);
 
-                        cmd.CommandText = $"INSERT INTO players(username, hash, salt) VALUES('{usernameinput.Text}', '{hash}', '{salt}')";
+                        cmd.Parameters.AddRange(new SQLiteParameter[]{
+                            new SQLiteParameter("dataUsername", usernameinput.Text),
+                            new SQLiteParameter("dataHash", hash),
+                            new SQLiteParameter("dataSalt", salt),
+                        });
 
                         cmd.ExecuteNonQuery();
+
 
                         Player.Username = usernameinput.Text;
                         content += "Account created. Logged in. \n";
@@ -164,7 +176,6 @@ namespace MusicQuiz2
 
                     string hash = Base64Encode(System.Text.Encoding.ASCII.GetString(new System.Security.Cryptography.SHA256Managed().ComputeHash(System.Text.Encoding.ASCII.GetBytes(System.Text.Encoding.ASCII.GetString(new System.Security.Cryptography.SHA256Managed().ComputeHash(Encoding.ASCII.GetBytes(password.Password))) + DBsalt))));
 
-                    Trace.WriteLine(hash);
 
                     if (hash == DBhash)
                     {

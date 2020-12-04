@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicQuiz2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize">
+        Title="Extreme Music Quiz" Height="450" Width="800" ResizeMode="NoResize">
     <Grid KeyDown="Grid_KeyDown">
 
         <Image x:Name="login_png" Margin="10,-78,220,217" Source="login.png" Stretch="Fill"/>

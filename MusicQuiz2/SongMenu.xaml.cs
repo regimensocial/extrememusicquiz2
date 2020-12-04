@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using System.Data.SQLite;
+using System.Text.RegularExpressions;
 
 namespace MusicQuiz2
 {
@@ -49,6 +50,7 @@ namespace MusicQuiz2
 
             m_dbConnection = new SQLiteConnection($"Data Source={database}; Version=3;");
             m_dbConnection.Open();
+
 
             RefreshSongs();
 
@@ -119,9 +121,14 @@ namespace MusicQuiz2
 
         private void BTNadd_Click(object sender, RoutedEventArgs e)
         {
-            cmd = new SQLiteCommand(m_dbConnection);
+            cmd = new SQLiteCommand("INSERT INTO songs(songName, artist) VALUES(@dataSong, @dataArtist)", m_dbConnection);
 
-            cmd.CommandText = $@"INSERT INTO songs(songName, artist) VALUES('{TBsongselect.Text}', '{TBartistselect.Text}')";
+            SQLiteParameter[] parameters = {
+                    new SQLiteParameter("dataSong", TBsongselect.Text.Trim()),
+                    new SQLiteParameter("dataArtist", TBartistselect.Text.Trim())
+            };
+
+            cmd.Parameters.AddRange(parameters);
 
             cmd.ExecuteNonQuery();
 
@@ -133,13 +140,16 @@ namespace MusicQuiz2
         private void BTNoverwrite_Click(object sender, RoutedEventArgs e)
         {
             if (selection != null) {
-                cmd = new SQLiteCommand(m_dbConnection);
 
-                cmd.CommandText = $@"DELETE FROM songs WHERE id={selection.Id} AND songName='{selection.SongName}' AND artist='{selection.Artist}'";
+                cmd = new SQLiteCommand("DELETE FROM songs WHERE id = @selectionID; INSERT INTO songs(id, songName, artist) VALUES(@selectionID, @dataSong, @dataArtist)", m_dbConnection);
 
-                cmd.ExecuteNonQuery();
+                SQLiteParameter[] parameters = { 
+                    new SQLiteParameter("selectionID", selection.Id), 
+                    new SQLiteParameter("dataSong", TBsongselect.Text.Trim()),
+                    new SQLiteParameter("dataArtist", TBartistselect.Text.Trim())
+                };
 
-                cmd.CommandText = $@"INSERT INTO songs(id, songName, artist) VALUES({selection.Id}, '{TBsongselect.Text}', '{TBartistselect.Text}')";
+                cmd.Parameters.AddRange(parameters);
 
                 cmd.ExecuteNonQuery();
 
@@ -165,9 +175,14 @@ namespace MusicQuiz2
         {
             if (selection != null)
             {
-                cmd = new SQLiteCommand(m_dbConnection);
 
-                cmd.CommandText = $@"DELETE FROM songs WHERE id={selection.Id} AND songName='{selection.SongName}' AND artist='{selection.Artist}'";
+                cmd = new SQLiteCommand("DELETE FROM songs WHERE id = @selectionID;", m_dbConnection);
+
+                SQLiteParameter[] parameters = {
+                    new SQLiteParameter("selectionID", selection.Id)
+                };
+
+                cmd.Parameters.AddRange(parameters);
 
                 cmd.ExecuteNonQuery();
 

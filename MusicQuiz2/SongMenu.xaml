@@ -14,7 +14,7 @@
             <DataGrid.Columns>
 
                 <DataGridTextColumn Binding="{Binding Id}" x:Name="DGid" Header="ID" Width="1*" IsReadOnly="True" />
-                <DataGridTextColumn Binding="{Binding Artist}" x:Name="DGartist" Header="Artist" Width="3*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Artist}" x:Name="DGartist" Header="Artist" Width="2.5*" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding SongName}" x:Name="DGsongname" Width="3*" Header="Song" IsReadOnly="True" />
 
             </DataGrid.Columns>

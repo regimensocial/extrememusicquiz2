@@ -11,9 +11,10 @@
     <Grid>
         <TextBlock x:Name="userinfo" HorizontalAlignment="Left" Margin="24,17,0,0" Text="TextBlock" VerticalAlignment="Top"/>
         <Image x:Name="extreme_png" Margin="10,30,18,34" Source="extreme.png" Stretch="Fill"/>
-        <Button x:Name="button" Content="Play!" HorizontalAlignment="Left" Margin="311,277,0,0" VerticalAlignment="Top" Width="156" Click="button_Click" Height="42"/>
+        <Button x:Name="button" Content="Play!" HorizontalAlignment="Left" Margin="311,267,0,0" VerticalAlignment="Top" Width="156" Click="button_Click" Height="42"/>
         <Button x:Name="BTNlogout" Content="Logout" HorizontalAlignment="Left" Margin="24,38,0,0" VerticalAlignment="Top" Width="56" Click="BTNlogout_Click" Height="28"/>
-        <Button x:Name="BTNsongmenu" Content="Song Menu" HorizontalAlignment="Left" Margin="311,327,0,0" VerticalAlignment="Top" Width="156" Click="BTNsongmenu_Click" Height="42"/>
+        <Button x:Name="BTNsongmenu" Content="Song Menu" HorizontalAlignment="Left" Margin="311,317,0,0" VerticalAlignment="Top" Width="156" Click="BTNsongmenu_Click" Height="42"/>
+        <Label x:Name="LBscore" HorizontalContentAlignment="Center"  Content="© Jamie Adams 2020 - the day you read this" HorizontalAlignment="Left" Margin="0,374,0,0" VerticalAlignment="Top" Width="780"/>
 
     </Grid>
 </Page>
