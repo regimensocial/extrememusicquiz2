@@ -23,24 +23,106 @@ namespace MusicQuiz2
     /// <summary>
     /// Interaction logic for Game.xaml
     /// </summary>
+    /// 
+
+    public class Song
+    {
+        public int id { get; set; }
+        public string songName { get; set; }
+        public string artist { get; set; }
+    }
+
     public partial class Game : Page
     {
-        public string songName = "";
+        public Song currentSong;
+
+        public int song = 0;
 
         public int guess = 0;
         public int score = 0;
 
         public bool empty = false;
+        public bool finished = false;
 
         SQLiteConnection m_dbConnection;
         SQLiteCommand cmd;
         SQLiteDataReader rdr;
 
+
+        public List<Song> SongList = new List<Song>();
+
+        private void newSong()
+        {
+            guess = 0;
+            score = 0;
+
+            if (song >= 0 && song < SongList.Count) // song + 1 > SongList.Count
+            {
+                BTNguess.Content = "This is it";
+                LBtakeguess.Content = "Your song is...";
+                LBmessage.Content = "";
+
+                //Keyboard.ClearFocus();
+
+                TBXguess.IsEnabled = true;
+                TBXguess.Text = "";
+                TBXguess.Focus();
+
+                LBsongcount.Content = "Song #" + (song + 1) + "/" + SongList.Count;
+
+                
+
+
+
+                Trace.WriteLine($"song {song}, count {SongList.Count}");
+
+                currentSong = SongList[song];
+                Trace.WriteLine(currentSong.songName);
+
+                currentSong.songName = currentSong.songName.Trim();
+
+                string res = currentSong.songName;
+                string[] temp = res.Split(' ');
+                res = "";
+
+
+                foreach (string word in temp)
+                {
+                    char firstletter = word[word.Length - word.Length];
+                    string tempword = new string('*', word.Length);
+                    tempword = firstletter + tempword.Remove(0, 1);
+                    res += tempword + " ";
+                }
+
+                TBartist.Text = "by " + currentSong.artist;
+
+                TBsong.Text = res;
+
+            }
+            else
+            {
+                finished = true;
+                TBXguess.IsEnabled = false;
+                BTNguess.Focus();
+
+                BTNguess.Content = "End game";
+
+                Trace.WriteLine("end");
+
+                TBartist.Text = "";
+                LBenterguess.Content = "";
+                TBsong.Text = "You've run out of songs!";
+                LBtakeguess.Content = "No songs left!";
+                LBmessage.Content = "";
+            }
+        }
+
+
         public Game()
         {
             InitializeComponent();
 
-            TBXguess.Focus();
+            
 
             string database = Directory.GetCurrentDirectory() + "/data.db";
 
@@ -48,18 +130,16 @@ namespace MusicQuiz2
             m_dbConnection.Open();
 
             CHBendless.IsChecked = Player.endless;
+            
 
             string stm = @"
                 SELECT * FROM songs
                 ORDER BY random()
-                LIMIT 1;
             ";
 
             cmd = new SQLiteCommand(stm, m_dbConnection);
             rdr = cmd.ExecuteReader();
 
-            var DBsongName = "";
-            var DBartist = "";
 
             if (!rdr.HasRows)
             {
@@ -78,43 +158,23 @@ namespace MusicQuiz2
 
             while (rdr.Read())
             {
-                DBsongName = rdr["songName"].ToString();
-                DBartist = rdr["artist"].ToString();
-
-                songName = DBsongName;
-
-                if (Player.lastSong == DBsongName)
+                SongList.Add(new Song()
                 {
-                    this.Content = new Frame { Content = new Game() };
-                } else
-                {
-                    DBsongName = DBsongName.Trim();
-                    Player.lastSong = DBsongName;
-                
-                    string res = DBsongName;
-                    string[] temp = res.Split(' ');
-                    res = "";
-
-
-                    foreach (string word in temp)
-                    {
-                        char firstletter = word[word.Length - word.Length];
-                        string tempword = new string('*', word.Length);
-                        tempword = firstletter + tempword.Remove(0, 1);
-                        res += tempword + " ";
-                    }
-
-                    TBartist.Text = "by " + DBartist;
-                
-                    TBsong.Text = res;
-                }
+                    songName = rdr["songName"].ToString(),
+                    artist = rdr["artist"].ToString(),
+                    id = rdr.GetInt32(rdr.GetOrdinal("id"))
+                });
             }
 
-            
+            newSong();
+
+
         }
 
         private void handleProgress()
         {
+            song++;
+            
             cmd = new SQLiteCommand(m_dbConnection);
 
             Player.localScore = Player.localScore + score;
@@ -124,39 +184,41 @@ namespace MusicQuiz2
             cmd.ExecuteNonQuery();
 
             Trace.WriteLine(Player.endless);
-
-            
-                if (score > 0)
+ 
+            if (score > 0)
+            {
+                newSong();
+            }
+            else
+            {
+                if (Player.endless)
                 {
-                    this.Content = new Frame { Content = new Game() };
+                    newSong();
+
                 }
                 else
                 {
-                    if (Player.endless)
-                    {
-                        this.Content = new Frame { Content = new Game() };
-                    } else
-                    {
-                        this.Content = new Frame { Content = new GameEnd() };
-                    }
+                    this.Content = new Frame { Content = new GameEnd() };
                 }
-            
-
-            // progress
+            }
         }
 
         private void BTNguess_Click(object sender, RoutedEventArgs e)
         {
-            if (!empty)
+            if (finished)
+            {
+                this.Content = new Frame { Content = new GameEnd() };
+
+            } else if (!empty)
             {
                 guess++;
 
                 if (guess != 3)
                 {
-                    if (TBXguess.Text.ToLower() == songName.ToLower())
+                    if (TBXguess.Text.ToLower() == currentSong.songName.ToLower())
                     {
                         LBtakeguess.Content = "It was";
-                        TBsong.Text = songName;
+                        TBsong.Text = currentSong.songName;
 
                         TBXguess.IsEnabled = false;
                         BTNguess.Focus();
@@ -189,7 +251,7 @@ namespace MusicQuiz2
                         else
                         {
                             LBtakeguess.Content = "It was";
-                            TBsong.Text = songName;
+                            TBsong.Text = currentSong.songName;
                             LBmessage.Content = "That still ain't it. You've failed.";
                             BTNguess.Focus();
                             TBXguess.IsEnabled = false;
@@ -200,6 +262,7 @@ namespace MusicQuiz2
                 else
                 {
                     handleProgress();
+                    
                 }
             } else
             {

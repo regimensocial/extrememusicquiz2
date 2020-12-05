@@ -73,10 +73,11 @@ namespace MusicQuiz2
             InitializeComponent();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-            
+
 
             //  TEMPORARY REMOVE AFTER
             // 
+            // this.Content = new Game();
         }
 
         private void CheckValues(bool signin)
