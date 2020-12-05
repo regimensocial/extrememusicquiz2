@@ -70,10 +70,6 @@ namespace MusicQuiz2
 
                 LBsongcount.Content = "Song #" + (song + 1) + "/" + SongList.Count;
 
-                
-
-
-
                 Trace.WriteLine($"song {song}, count {SongList.Count}");
 
                 currentSong = SongList[song];
@@ -122,8 +118,6 @@ namespace MusicQuiz2
         {
             InitializeComponent();
 
-            
-
             string database = Directory.GetCurrentDirectory() + "/data.db";
 
             m_dbConnection = new SQLiteConnection($"Data Source={database}; Version=3;");
@@ -167,7 +161,6 @@ namespace MusicQuiz2
             }
 
             newSong();
-
 
         }
 
