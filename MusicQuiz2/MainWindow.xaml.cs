@@ -37,6 +37,7 @@ namespace MusicQuiz2
 
     public partial class MainWindow : Window
     {
+        public string database = Directory.GetCurrentDirectory() + "/data.db";
 
         public static string RandomString(int length)
         {
@@ -46,14 +47,6 @@ namespace MusicQuiz2
             
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-        private static string MakeValidFileName(string name)
-        {
-            string invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
-            string invalidRegStr = string.Format(@"([{0}]*\.+$)|([{0}]+)", invalidChars);
-
-            return System.Text.RegularExpressions.Regex.Replace(name, invalidRegStr, "_");
         }
 
         public static string Base64Encode(string plainText)
@@ -73,11 +66,16 @@ namespace MusicQuiz2
             InitializeComponent();
             this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
+            Application.Current.DispatcherUnhandledException += App_DispatcherUnhandledException;
 
+            if (!File.Exists(database))
+            {
+                //SQLiteConnection.CreateFile(database);
+            }
 
             //  TEMPORARY REMOVE AFTER
             // 
-            // this.Content = new Game();
+            this.Content = new SongMenu();
         }
 
         private void CheckValues(bool signin)
@@ -89,7 +87,7 @@ namespace MusicQuiz2
             {
                 // If every data be correct
 
-                string database = Directory.GetCurrentDirectory() + "/data.db";
+                
 
                 SQLiteConnection m_dbConnection = new SQLiteConnection($"Data Source={database}; Version=3;");
                 m_dbConnection.Open();
@@ -107,13 +105,18 @@ namespace MusicQuiz2
 	                'score' INTEGER NOT NULL DEFAULT 0,
 	                PRIMARY KEY('id')
                 ); CREATE TABLE IF NOT EXISTS 'songs' (
-	                'id'	INTEGER,
-	                'songName'	TEXT,
-	                'artist'	TEXT,
-	                'difficulty'	INT,
-	                'playCount'	INT,
-	                'dateAdded'	TEXT,
-	                PRIMARY KEY('id')
+                	'id'	INTEGER,
+                	'songName'	TEXT,
+                	'artist'	TEXT,
+                	'difficulty'	INT,
+                	'playCount'	INT,
+                	'dateAdded'	TEXT,
+                	'playlist'	TEXT NOT NULL DEFAULT 'Main',
+                	FOREIGN KEY('playlist') REFERENCES 'playlists'('name') ON UPDATE CASCADE ON DELETE CASCADE,
+                	PRIMARY KEY('id')
+                ); CREATE TABLE IF NOT EXISTS 'playlists' (
+                	'name'	TEXT UNIQUE,
+                	PRIMARY KEY('name')
                 );";
 
                 cmd.ExecuteNonQuery();
@@ -233,6 +236,13 @@ namespace MusicQuiz2
         private void BTNclose_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Windows[0].Close();
+        }
+
+        // error
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            System.Windows.MessageBox.Show(e.Exception.ToString());
         }
     }
 }

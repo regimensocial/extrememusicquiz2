@@ -10,27 +10,35 @@
 
     <Grid>
         <Button x:Name="BTNmenu" Content="Menu" HorizontalAlignment="Left" Margin="24,38,0,0" VerticalAlignment="Top" Width="74" Click="BTNmenu_Click" Height="30"/>
-        <DataGrid x:Name="results" MouseDoubleClick="results_MouseDoubleClick" AutoGenerateColumns="False"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" CanUserResizeColumns="False" CanUserResizeRows="False" Margin="199,38,0,0" Height="228">
+        <DataGrid x:Name="results" MouseUp="results_MouseUp" AutoGenerateColumns="False"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" CanUserResizeColumns="False" CanUserResizeRows="False" Margin="199,38,0,0" Height="228">
             <DataGrid.Columns>
 
                 <DataGridTextColumn Binding="{Binding Id}" x:Name="DGid" Header="ID" Width="1*" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Artist}" x:Name="DGartist" Header="Artist" Width="2.5*" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding SongName}" x:Name="DGsongname" Width="3*" Header="Song" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Playlist}" x:Name="DGplaylistID" Width="3*" Header="Playlist" IsReadOnly="True" />
 
             </DataGrid.Columns>
 
         </DataGrid>
-        <Label x:Name="LBsongselect" Content="Song" Width="93" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,277,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="LBsongselect" Content="Song" Width="93" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,274,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TBsongselect" HorizontalAlignment="Left" Height="23" Margin="199,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="193"/>
 
-        <Label x:Name="LBartistselect" Content="Artist" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,305,0,0" VerticalAlignment="Top" Width="93"/>
+        <Label x:Name="LBartistselect" VerticalContentAlignment="Center" Content="Artist" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Margin="101,303,0,0" VerticalAlignment="Top" Width="93"/>
         <TextBox x:Name="TBartistselect" HorizontalAlignment="Left" Height="23" Margin="199,305,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="194"/>
-        <Button x:Name="BTNoverwrite" IsEnabled="False" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
-        <Button x:Name="BTNadd" IsEnabled="True" Content="Add Song" HorizontalAlignment="Left" Margin="199,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNadd_Click"/>
+        <Button x:Name="BTNoverwrite" MouseLeave="BTNoverwrite_MouseLeave" MouseEnter="BTNoverwrite_MouseEnter" IsEnabled="False" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
+        <Button x:Name="BTNadd" IsEnabled="True" Content="Add Song(s)" HorizontalAlignment="Left" Margin="282,365,0,0" VerticalAlignment="Top" Width="110" Height="23" Click="BTNadd_Click" RenderTransformOrigin="0.278,1.725"/>
         <Label x:Name="LBnamesong" Width="198" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label x:Name="LBnameartist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="198" FontWeight="Bold"/>
-        <Button x:Name="BTNdeselect" IsEnabled="False"  Content="Deselect Song" HorizontalAlignment="Left" Margin="401,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdeselect_Click"/>
-        <Button x:Name="BTNdel" IsEnabled="False"  Content="Delete Song" HorizontalAlignment="Left" Margin="401,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdel_Click" />
+        <Button x:Name="BTNdeselect" IsEnabled="False"  Content="Deselect Song(s)" HorizontalAlignment="Left" Margin="401,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdeselect_Click"/>
+        <Button x:Name="BTNdel" IsEnabled="False"  Content="Delete Song(s)" HorizontalAlignment="Left" Margin="401,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdel_Click" />
+        <ComboBox x:Name="CBplaylist" HorizontalAlignment="Left" Margin="199,366,0,0" VerticalAlignment="Top" Width="78" SelectionChanged="CBplaylist_SelectionChanged">
+            <!--<ComboBoxItem IsSelected="True">Main</ComboBoxItem>-->
+        </ComboBox>
+        <Label x:Name="LBplaylist" Content="Playlist" Width="51" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="22,364,0,0" VerticalAlignment="Top" Height="26"/>
+        <ComboBox  x:Name="CBplaylistdisplay" HorizontalAlignment="Left" Margin="199,11,0,0" VerticalAlignment="Top" Width="400" SelectionChanged="CBplaylistdisplay_SelectionChanged">
+            <ComboBoxItem IsSelected="True">All playlists</ComboBoxItem>
+        </ComboBox>
 
 
     </Grid>

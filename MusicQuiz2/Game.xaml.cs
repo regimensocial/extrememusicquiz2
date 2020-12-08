@@ -41,6 +41,8 @@ namespace MusicQuiz2
         public int guess = 0;
         public int score = 0;
 
+        public int correctlyGuessed = 0;
+
         public bool empty = false;
         public bool finished = false;
 
@@ -51,6 +53,20 @@ namespace MusicQuiz2
 
         public List<Song> SongList = new List<Song>();
 
+        private void updatePercentages()
+        {
+            float cgSGC = (float)Math.Round(((float)correctlyGuessed / (float)song) * 100, 0);
+
+            float cgSTC = (float)Math.Round(((float)correctlyGuessed / (float)SongList.Count) * 100, 0);
+
+            if (double.IsNaN(cgSGC))
+            {
+                cgSGC = 0;
+            }
+
+            LBcorrectlyguessed.Content = LBcorrectlyguessed.Content = $"Correctly guessed:\n - In total: {correctlyGuessed}/{SongList.Count} ({cgSTC}%)\n - Of played: {correctlyGuessed}/{song} ({cgSGC}%)";
+        }
+
         private void newSong()
         {
             guess = 0;
@@ -58,6 +74,8 @@ namespace MusicQuiz2
 
             if (song >= 0 && song < SongList.Count) // song + 1 > SongList.Count
             {
+                updatePercentages();
+
                 BTNguess.Content = "This is it";
                 LBtakeguess.Content = "Your song is...";
                 LBmessage.Content = "";
@@ -114,6 +132,7 @@ namespace MusicQuiz2
         }
 
 
+
         public Game()
         {
             InitializeComponent();
@@ -161,7 +180,6 @@ namespace MusicQuiz2
             }
 
             newSong();
-
         }
 
         private void handleProgress()
@@ -180,6 +198,10 @@ namespace MusicQuiz2
  
             if (score > 0)
             {
+                correctlyGuessed++;
+
+                
+
                 newSong();
             }
             else
@@ -210,12 +232,12 @@ namespace MusicQuiz2
                 {
                     if (TBXguess.Text.ToLower() == currentSong.songName.ToLower())
                     {
+
                         LBtakeguess.Content = "It was";
                         TBsong.Text = currentSong.songName;
 
                         TBXguess.IsEnabled = false;
                         BTNguess.Focus();
-                        TBXguess.IsEnabled = false;
 
 
                         if (guess == 1)
