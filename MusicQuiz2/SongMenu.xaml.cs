@@ -41,6 +41,7 @@ namespace MusicQuiz2
 
     public partial class SongMenu : Page
     {
+
         SQLiteConnection m_dbConnection;
         SQLiteCommand cmd;
         SQLiteDataReader rdr;
@@ -51,19 +52,31 @@ namespace MusicQuiz2
 
         public List<songItems> selection = new List<songItems>();
 
+        public List<playlist> selectionPlaylists = new List<playlist>();
+
+
         public string database = Directory.GetCurrentDirectory() + "/data.db";
 
         public SongMenu()
         {
             InitializeComponent();
 
+            PlaylistControls.Visibility = Visibility.Hidden;
+
             m_dbConnection = new SQLiteConnection($"Data Source={database}; Version=3;");
             m_dbConnection.Open();
 
+            RefreshPlaylists();
+        }
 
+        public void RefreshPlaylists()
+        {
             
 
-            //
+            CBplaylist.Items.Clear();
+            CBplaylistdisplay.Items.Clear();
+            playlistList.Clear();
+            gridPlaylistEdit.Items.Clear();
 
             string stm = @"
                 SELECT * FROM playlists
@@ -72,11 +85,7 @@ namespace MusicQuiz2
             cmd = new SQLiteCommand(stm, m_dbConnection);
             rdr = cmd.ExecuteReader();
 
-
-            if (!rdr.HasRows)
-            {
-   
-            }
+            CBplaylistdisplay.Items.Add("- All Playlists -");
 
             while (rdr.Read())
             {
@@ -88,9 +97,26 @@ namespace MusicQuiz2
                     Name = rdr["name"].ToString()
                 });
 
+                gridPlaylistEdit.Items.Add(new playlist
+                {
+                    Name = rdr["name"].ToString()
+                });
+
             }
+
+
+            if (newTable == null)
+            {
+                CBplaylistdisplay.SelectedIndex = 0;
+            }
+
             CBplaylist.SelectedIndex = 0;
 
+            BTNdeselectplaylist_Click(null, null);
+
+            newTable = oldPlaylist;
+
+            Trace.WriteLine(oldPlaylist);
 
             RefreshSongs();
         }
@@ -99,9 +125,16 @@ namespace MusicQuiz2
         {
             if (newTable != null)
             {
-
-                CBplaylistdisplay.SelectedValue = newTable;
+                if (CBplaylistdisplay.Items.Contains(newTable))
+                {
+                    CBplaylistdisplay.SelectedValue = newTable;
+                } else
+                {
+                    CBplaylistdisplay.SelectedIndex = 0;
+                    
+                }
                 newTable = null;
+
             }
 
 
@@ -114,6 +147,10 @@ namespace MusicQuiz2
                 stm = $@"
                     select * from songs  WHERE playlist = '{CBplaylistdisplay.SelectedValue}'
                 ";
+                DGplaylistID.Visibility = Visibility.Collapsed;
+            } else
+            {
+                DGplaylistID.Visibility = Visibility.Visible;
             }
 
 
@@ -168,6 +205,8 @@ namespace MusicQuiz2
 
                     TBartistselect.Text = "";
                     TBsongselect.Text = "";
+                    LBnamesong.FontStyle = FontStyles.Italic;
+                    LBnamesong.FontWeight = FontWeights.Normal;
                     LBnamesong.Content = "Multiple items selected";
                     LBnameartist.Content = "";
 
@@ -185,6 +224,8 @@ namespace MusicQuiz2
 
                 } else
                 {
+                    LBnamesong.FontStyle = FontStyles.Normal;
+                    LBnamesong.FontWeight = FontWeights.Bold;
                     BTNoverwrite.IsEnabled = true;
 
                     TBsongselect.IsEnabled = true;
@@ -332,6 +373,7 @@ namespace MusicQuiz2
 
         private void CBplaylistdisplay_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            newTable = null;
             RefreshSongs();
             var temp = 0;
             CBplaylist.SelectedValue = CBplaylistdisplay.SelectedValue;
@@ -369,5 +411,242 @@ namespace MusicQuiz2
             }
         }
 
+
+        bool playlistControls = false;
+        private void BTNplaylistedit_Click(object sender, RoutedEventArgs e)
+        {
+            playlistControls = !playlistControls;
+            PlaylistControls.IsEnabled = playlistControls;
+
+            if (PlaylistControls.IsEnabled)
+            {
+                BTNplaylistedit.Content = "Hide Menu";
+                PlaylistControls.Visibility = Visibility.Visible;
+            } else
+            {
+                BTNplaylistedit.Content = "Edit Playlists";
+                PlaylistControls.Visibility = Visibility.Hidden;
+            }
+
+            string stm = @"
+                SELECT * FROM playlists
+            ";
+
+            cmd = new SQLiteCommand(stm, m_dbConnection);
+            rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                
+            }
+        }
+
+
+        private void gridPlaylistEdit_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (gridPlaylistEdit.SelectedItem is playlist)
+            {
+
+                BTNupdateplaylist.IsEnabled = true;
+
+                BTNdeselectplaylist.IsEnabled = true;
+
+                BTNaddplaylist.IsEnabled = false;
+
+                BTNdelplaylist.IsEnabled = true;
+
+                selectionPlaylists.Clear();
+
+                foreach (playlist item in gridPlaylistEdit.SelectedItems)
+                {
+                    selectionPlaylists.Add(new playlist
+                    {
+                        Name = item.Name,
+                        Id = item.Id,
+                    });
+                }
+
+                if (gridPlaylistEdit.SelectedItems.Count > 1)
+                {
+                    TBplaylists.IsEnabled = false;
+                    BTNupdateplaylist.IsEnabled = false;
+                }
+                else
+                {
+                    TBplaylists.IsEnabled = true;
+                    BTNupdateplaylist.IsEnabled = true;
+                    TBplaylists.Text = selectionPlaylists[0].Name;
+                    
+                }
+            }
+        }
+
+        private int deleteProgress = 0;
+
+        private void BTNdeselectplaylist_Click(object sender, RoutedEventArgs e)
+        {
+            BTNdelplaylist.Content = "Delete";
+            deleteProgress = 0;
+            BTNaddplaylist.IsEnabled = true;
+            LBplerror.Content = "";
+            selectionPlaylists.Clear();
+            TBplaylists.IsEnabled = true;
+            BTNdeselectplaylist.IsEnabled = false;
+            BTNupdateplaylist.IsEnabled = false;
+            BTNdelplaylist.IsEnabled = false;
+            TBplaylists.Text = "";
+        }
+
+        private string oldPlaylist;
+
+        private void BTNupdateplaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectionPlaylists != null && TBplaylists.Text.Length > 0)
+            {
+                if (selectionPlaylists[0].Name != "Main")
+                {
+                    if (!CBplaylistdisplay.Items.Contains(TBplaylists.Text))
+                    {
+
+                        cmd = new SQLiteCommand(@"
+                        UPDATE playlists
+                        SET name = @selectionnewname
+                        WHERE name = @selectionoldname;
+                    ", m_dbConnection);
+
+                        cmd.Parameters.AddRange(new SQLiteParameter[] {
+                        new SQLiteParameter("selectionnewname", TBplaylists.Text),
+                        new SQLiteParameter("selectionoldname", selectionPlaylists[0].Name)
+                    });
+
+                        cmd.ExecuteNonQuery();
+
+                        cmd = new SQLiteCommand(@"
+                        UPDATE songs
+                        SET playlist = @selectionnewname
+                        WHERE playlist = @selectionoldname;
+                    ", m_dbConnection);
+
+
+                        cmd.Parameters.AddRange(new SQLiteParameter[] {
+                        new SQLiteParameter("selectionnewname", TBplaylists.Text),
+                        new SQLiteParameter("selectionoldname", selectionPlaylists[0].Name)
+                    });
+
+                        cmd.ExecuteNonQuery();
+
+                        oldPlaylist = TBplaylists.Text;
+
+                        RefreshPlaylists();
+                        BTNdeselectplaylist_Click(null, null);
+
+                    }
+                    else
+                    {
+                        LBplerror.Content = "Name taken";
+                        TBplaylists.Text = "";
+                    }
+                } else
+                {
+                    LBplerror.Content = "Cannot rename Main";
+                }
+                    
+            }
+            else
+            {
+                LBplerror.Content = "Cannot be blank";
+            }
+        }
+
+        private void BTNdelplaylist_Click(object sender, RoutedEventArgs e)
+        {
+            deleteProgress++;
+
+            if (deleteProgress == 0)
+            {
+                BTNdelplaylist.Content = "Delete";
+            } else if (deleteProgress == 1)
+            {
+                BTNdelplaylist.Content = "Are you sure?";
+            } else if (deleteProgress == 2)
+            {
+
+                if (selectionPlaylists != null)
+                {
+                    
+
+                    foreach (playlist sel in selectionPlaylists.ToList())
+                    {
+                        if (sel.Name != "Main")
+                        {
+                            cmd = new SQLiteCommand("DELETE FROM playlists WHERE name = @selectionName;", m_dbConnection);
+
+                            SQLiteParameter[] parameters = {
+                                new SQLiteParameter("selectionName", sel.Name)
+                            };
+
+                            cmd.Parameters.AddRange(parameters);
+
+                            cmd.ExecuteNonQuery();
+
+                            cmd = new SQLiteCommand("DELETE FROM songs WHERE playlist = @selectionName;", m_dbConnection);
+
+                            cmd.Parameters.AddRange(new SQLiteParameter[] {
+                                new SQLiteParameter("selectionName", sel.Name)
+                            });
+
+                            cmd.ExecuteNonQuery();
+
+                            RefreshSongs();
+
+                            RefreshPlaylists();
+
+                            BTNdelplaylist.Content = "handl delete";
+
+
+                            BTNdeselectplaylist_Click(null, null);
+                            deleteProgress = 0;
+                        } else
+                        {
+                            LBplerror.Content = "Cannot delete Main";
+                        }  
+                    }   
+                }                
+            }
+        }
+
+        private void BTNaddplaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (TBplaylists.Text.Length > 0)
+            {
+                if (!CBplaylistdisplay.Items.Contains(TBplaylists.Text))
+                {
+
+                    cmd = new SQLiteCommand(@"
+                    INSERT INTO playlists(name)
+                    VALUES(@selectionname);
+                ", m_dbConnection);
+
+                    cmd.Parameters.AddRange(new SQLiteParameter[] {
+                    new SQLiteParameter("selectionname", TBplaylists.Text)
+                });
+
+                    cmd.ExecuteNonQuery();
+
+                    oldPlaylist = TBplaylists.Text;
+
+                    RefreshPlaylists();
+                    BTNdeselectplaylist_Click(null, null);
+                }
+                else
+                {
+                    LBplerror.Content = "Name taken";
+                    TBplaylists.Text = "";
+                }
+            } else
+            {
+                LBplerror.Content = "Cannot be blank";
+            }
+        }
     }
 }

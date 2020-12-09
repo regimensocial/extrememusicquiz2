@@ -99,14 +99,28 @@ namespace MusicQuiz2
                 string[] temp = res.Split(' ');
                 res = "";
 
-
-                foreach (string word in temp)
+                if (temp.Length > 0)
                 {
-                    char firstletter = word[word.Length - word.Length];
-                    string tempword = new string('*', word.Length);
-                    tempword = firstletter + tempword.Remove(0, 1);
-                    res += tempword + " ";
+                    foreach (string word in temp)
+                    {
+                        if (word.Length > 0)
+                        {
+                            char firstletter = word[word.Length - word.Length];
+                            string tempword = new string('*', word.Length);
+                            tempword = firstletter + tempword.Remove(0, 1);
+                            res += tempword + " ";
+                        } else
+                        {
+                            res = "";
+                        }
+
+                        
+                    }
+                } else
+                {
+                    res = "";
                 }
+                
 
                 TBartist.Text = "by " + currentSong.artist;
 

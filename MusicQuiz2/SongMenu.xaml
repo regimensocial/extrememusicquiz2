@@ -13,7 +13,7 @@
         <DataGrid x:Name="results" MouseUp="results_MouseUp" AutoGenerateColumns="False"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" CanUserResizeColumns="False" CanUserResizeRows="False" Margin="199,38,0,0" Height="228">
             <DataGrid.Columns>
 
-                <DataGridTextColumn Binding="{Binding Id}" x:Name="DGid" Header="ID" Width="1*" IsReadOnly="True" />
+                <DataGridTextColumn Binding="{Binding Id}" x:Name="DGid" Header="ID" Width="0.5*" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Playlist}" x:Name="DGplaylistID" Width="1*" Header="Playlist" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding SongName}" x:Name="DGsongname" Width="3*" Header="Song" IsReadOnly="True" />
                 <DataGridTextColumn Binding="{Binding Artist}" x:Name="DGartist" Header="Artist" Width="2*" IsReadOnly="True" />
@@ -28,17 +28,35 @@
         <TextBox x:Name="TBartistselect" HorizontalAlignment="Left" Height="23" Margin="199,305,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="194"/>
         <Button x:Name="BTNoverwrite" MouseLeave="BTNoverwrite_MouseLeave" MouseEnter="BTNoverwrite_MouseEnter" IsEnabled="False" Content="Update Song" HorizontalAlignment="Left" Margin="199,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNoverwrite_Click"/>
         <Button x:Name="BTNadd" IsEnabled="True" Content="Add Song(s)" HorizontalAlignment="Left" Margin="282,365,0,0" VerticalAlignment="Top" Width="110" Height="23" Click="BTNadd_Click" RenderTransformOrigin="0.278,1.725"/>
-        <Label x:Name="LBnamesong" Width="198" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label x:Name="LBnameartist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="198" FontWeight="Bold"/>
+        <Label x:Name="LBnamesong" Width="389" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,277,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="LBnameartist" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="401,305,0,0" VerticalAlignment="Top" Width="389" FontWeight="Bold"/>
         <Button x:Name="BTNdeselect" IsEnabled="False"  Content="Deselect Song(s)" HorizontalAlignment="Left" Margin="401,337,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdeselect_Click"/>
         <Button x:Name="BTNdel" IsEnabled="False"  Content="Delete Song(s)" HorizontalAlignment="Left" Margin="401,365,0,0" VerticalAlignment="Top" Width="193" Height="23" Click="BTNdel_Click" />
         <ComboBox x:Name="CBplaylist" HorizontalAlignment="Left" Margin="199,366,0,0" VerticalAlignment="Top" Width="78" SelectionChanged="CBplaylist_SelectionChanged">
             <!--<ComboBoxItem IsSelected="True">Main</ComboBoxItem>-->
         </ComboBox>
-        <ComboBox  x:Name="CBplaylistdisplay" HorizontalAlignment="Left" Margin="199,11,0,0" VerticalAlignment="Top" Width="400" SelectionChanged="CBplaylistdisplay_SelectionChanged">
-            <ComboBoxItem IsSelected="True">All playlists</ComboBoxItem>
+        <ComboBox  x:Name="CBplaylistdisplay" HorizontalAlignment="Left" Margin="199,11,0,0" VerticalAlignment="Top" Width="305" SelectionChanged="CBplaylistdisplay_SelectionChanged">
+            
         </ComboBox>
+        <Button x:Name="BTNplaylistedit" Content="Edit Playlists" HorizontalAlignment="Left" Margin="509,11,0,0" VerticalAlignment="Top" Width="90" Height="22" Click="BTNplaylistedit_Click"/>
+        <Grid x:Name="PlaylistControls" Margin="604,38,42,10" IsEnabled="False" Visibility="Visible">
 
+            <Label x:Name="label" Content="Playlists" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="127"/>
+            <DataGrid x:Name="gridPlaylistEdit" MouseUp="gridPlaylistEdit_MouseUp" HorizontalAlignment="Left" Height="139" Margin="10,41,0,0" VerticalAlignment="Top" Width="127">
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Binding="{Binding Name}" x:Name="DGPEplaylistname" Header="Playlist" Width="1*" IsReadOnly="True" />
+
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="BTNdelplaylist" Content="Delete" HorizontalAlignment="Left" Margin="10,310,0,0" VerticalAlignment="Top" Width="127" Height="24" Click="BTNdelplaylist_Click"/>
+            <TextBox x:Name="TBplaylists" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" Margin="10,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="127"/>
+            <Button x:Name="BTNaddplaylist" Content="New Playlist" HorizontalAlignment="Left" Margin="10,282,0,0" VerticalAlignment="Top" Width="127" Height="24" Click="BTNaddplaylist_Click"/>
+            <Button x:Name="BTNdeselectplaylist" IsEnabled="False" Content="Deselect Playlist(s)" HorizontalAlignment="Left" Margin="10,215,0,0" VerticalAlignment="Top" Width="127" Height="23" Click="BTNdeselectplaylist_Click"/>
+            <Button x:Name="BTNupdateplaylist" Content="Update Playlist" HorizontalAlignment="Left" Margin="10,254,0,0" VerticalAlignment="Top" Width="127" Height="24" Click="BTNupdateplaylist_Click"/>
+            <Label x:Name="LBplerror" Content="" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,339,0,0" Width="127" FontWeight="Bold"/>
+
+        </Grid>
 
     </Grid>
 </Page>
