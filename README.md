@@ -9,9 +9,11 @@ I spent the first few months of school pretending I was doing my project, then o
 
 The original was "extrememusicquiz" which I started before the pandemic, and then I wanted to restart it when it was time to actually make this, hence why this is number two.
 
-This project was never assessed or even looked at as far as I know (exam season Summer 2021), but I was asked to record a demo of it in case it was needed for evidence. I might link that soon, as well as packaging a release.
+This project was never assessed or even looked at as far as I know (exam season Summer 2021), but I was asked to record a demo of it in case it was needed for evidence.
 
 I also made the most difficult music quiz ever by having people submit different songs on my Snapchat Story, so somewhere there is a save file with like 100 songs all of varying genres and tastes.
+You can watch the [demo here](https://regimen.social/gcseProjectDemo.mp4). Do remember that all the songs were submitted by year 11s at the time.
+
 This has all the features plus more, it has a useless playlist function which can't actually be used in the quiz.
 
 I did actually really like WPF, but I now prefer to use Qt due to cross-compatibility; this is Windows only sadly.
